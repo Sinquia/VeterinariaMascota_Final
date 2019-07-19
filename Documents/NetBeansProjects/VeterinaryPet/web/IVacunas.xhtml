@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+    
+    <body>
+        <ui:composition template="./TemplateVeterinaria.xhtml">
+
+            <ui:define name="content">
+                 <p:growl id="msj" autoUpdate="true"/>
+                    <h:form id="formVacuna">
+                        
+                        <p:panel >
+                            <f:facet name="header">
+                                <p:column>
+                                    <p:outputLabel value=" Mantenimiento Vacunas"/>
+                                </p:column>
+                            </f:facet>
+                             <h:panelGrid columns="4">
+
+                            <p:outputLabel value="id"/>
+                            <p:inputText  value="#{vacunasBean.vacuna.idVacunas}" required="true" />
+                            <p:outputLabel value="Tipo de vacuna"/>
+                            <p:inputText  value="#{vacunasBean.vacuna.tipoVacuna}" required="true" />
+                            <p:outputLabel value="Edad"/>
+                            <p:inputText value="#{vacunasBean.vacuna.edadMascota}" required="true"/>
+                            <p:outputLabel value="Precio"/>
+                            <p:inputText value="#{vacunasBean.vacuna.precio}" required="true"/>
+                        </h:panelGrid>
+                          <h:panelGrid columns="4">   
+                            <p:column>
+                                <p:selectOneMenu  id="tipoVacuna" value="#{vacunasBean.vacuna.idVacunas}">
+                                    <f:selectItem  itemValue="0" itemLabel="Seleccione Item..."/>
+                                    <f:selectItem  itemValue="1" itemLabel="Infecciosas"/>
+                                    <f:selectItem  itemValue="2" itemLabel="No Infecciosas"/>
+                                </p:selectOneMenu>
+                            </p:column>
+                        </h:panelGrid>
+                            <p:commandButton value="Nuevo" action="#{vacunasBean.clean()}" update=":formVacuna"/>
+                            <p:commandButton value="Guardar" action="#{vacunasBean.InsertarVacuna}" update=":tableVacunas:listarVacunas" rendered="#{!vacunasBean.banderaSelect}"/>
+                            <p:commandButton value="Editar" action="#{vacunasBean.GuardarVacuna()}" update=":tableVacunas:listarVacunas" rendered="#{vacunasBean.banderaSelect}"/>
+                        </p:panel>
+                    </h:form>
+                    <h:form id="tableVacunas">
+                        <p:dataTable id="listarVacunas" var="vacuna" value="#{vacunasBean.listarVacunas()}" rowKey="#{vacuna.idVacuna}" selection="#{vacunasBean.vacuna}" selectionMode="single" >
+                            <p:ajax event="rowSelect" update=":formVacuna" listener="#{vacunasBean.banderaSelect()}"/>
+                            <p:column headerText="Codigo">
+                                <p:outputLabel value="#{vacuna.getIdVacunas()}"/>
+                            </p:column>
+                            <p:column headerText="Tipo de Vacuna">
+                                <p:outputLabel value="#{vacuna.getTipoVacuna()}"/>
+                            </p:column>
+                
+                            <p:column headerText="Edad">
+                                <p:outputLabel value="#{vacuna.edadMascota}"/>
+                            </p:column>
+                            <p:column headerText="Precio">
+                                <p:outputLabel value="#{vacuna.getPrecio()}"/>
+                            </p:column>
+                            <p:column headerText="Acciones">
+                                <p:commandButton value="Eliminar" oncomplete="PF('dlgEliminar').show();">
+                                    <f:setPropertyActionListener target="#{mascotasBean.mascota}" value="#{mascota}"/>
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>
